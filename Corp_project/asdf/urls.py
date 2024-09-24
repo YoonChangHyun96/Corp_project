@@ -42,4 +42,8 @@ urlpatterns = [
 
     path('message_delete/<int:message_id>/', views.Message_Delete, name = 'Message_Delete'),
 
+    # 엘리베이터 속도 체크 URL
+    path('check_elevator/', views.check_elevator_speed, name='check_elevator_speed'),
+    path('elevator_form/', views.elevator_form, name='elevator_form'),  # HTML 페이지 경로
+
 ]

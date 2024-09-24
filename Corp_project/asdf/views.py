@@ -221,3 +221,35 @@ def Message_Delete(request, message_id):
     message_object.delete()
 
     return redirect('Message_Box_Page')
+
+
+#speed_ych
+
+from django.http import JsonResponse
+
+
+# 엘리베이터 속도 계산 및 오류 체크
+# 템플릿을 렌더링하는 뷰 함수
+def elevator_form(request):
+    return render(request, 'check_elevator.html')
+
+# 엘리베이터 속도 체크 로직 (이전 설명한 로직)
+def check_elevator_speed(request):
+    try:
+        floor_start = int(request.GET.get('start', 10))
+        floor_end = int(request.GET.get('end', 1))
+        time_taken = float(request.GET.get('time', 27))
+
+        FLOOR_DISTANCE = 3.0
+        ELEVATOR_SPEED = 1.0
+        distance = abs(floor_start - floor_end) * FLOOR_DISTANCE
+        expected_time = distance / ELEVATOR_SPEED
+
+        if time_taken > expected_time * 1.2:
+            return JsonResponse({'status': 'error', 'message': 'Elevator is too slow!'})
+        elif time_taken < expected_time * 0.8:
+            return JsonResponse({'status': 'error', 'message': 'Elevator is too fast!'})
+        else:
+            return JsonResponse({'status': 'ok', 'message': 'Elevator speed is normal.'})
+    except ValueError:
+        return JsonResponse({'status': 'error', 'message': 'Invalid input data.'})
