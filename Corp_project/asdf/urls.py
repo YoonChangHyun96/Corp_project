@@ -42,8 +42,8 @@ urlpatterns = [
 
     path('message_delete/<int:message_id>/', views.Message_Delete, name = 'Message_Delete'),
 
-    # 엘리베이터 속도 체크 URL
-    path('check_elevator/', views.check_elevator_speed, name='check_elevator_speed'),
-    path('elevator_form/', views.elevator_form, name='elevator_form'),  # HTML 페이지 경로
-
+    #ych
+    path('challenge/', views.challenge_level_selection, name='challenge_level_selection'),
+    path('battle/<int:level>/', views.battle_page, name='battle_page'),
+    path('reset_battle/<int:level>/', views.reset_battle, name='reset_battle'),  # 전투 상태 초기화 URL
 ]

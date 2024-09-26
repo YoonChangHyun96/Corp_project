@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        .battle-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+        }
+
+        .character {
+            text-align: center;
+        }
+
+        .log-container {
+            width: 400px;
+            height: 200px;
+            overflow-y: auto;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+
+        .log-box {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .attack-form {
+            margin-top: 20px;
+        }
+
+        .character img {
+            width: 100px;
+            height: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="battle-container">
+        <div class="character">
+            <h3>플레이어</h3>
+            <p>HP: {{ player_hp }} / 200</p>
+            <!-- 플레이어 이미지 추가 -->
+            <img src="{% static 'images/player_image.jpg' %}" alt="플레이어 이미지">
+        </div>
+
+        <div class="character">
+            <h3>상대방</h3>
+            <p>HP: {{ opponent_hp }} / 211</p>
+            <!-- 상대방 이미지 추가 -->
+            <img src="{% static 'images/opponent_image.jpg' %}" alt="상대방 이미지">
+        </div>
+    </div>
+
+    <!-- 전투 로그 박스 (스크롤 가능) -->
+    <div class="log-container" id="log-container">
+        {% for log in battle_logs %}
+        <div class="log-box">
+            {{ log }}
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="attack-form">
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" name="attack_type" value="strong">강한 공격</button>
+            <button type="submit" name="attack_type" value="weak">약한 공격</button>
+        </form>
+    </div>
+
+    <script>
+        // 로그 박스를 항상 아래로 스크롤하는 스크립트
+        var logContainer = document.getElementById('log-container');
+        logContainer.scrollTop = logContainer.scrollHeight;
+    </script>
+
+</body>
+</html>
