@@ -76,12 +76,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "HOST": "localhost",
-        "PORT": "3306",
-        "NAME": "Corp",
-        "USER": "root",
-        "PASSWORD": "1234",
+        'ENGINE': 'django.db.backends.sqlite3',
+        'HOST' : '10.10.21.68',
+        'PORT' : '3306',
+        'NAME': 'corp',
+        'USER' : 'root2',
+        'PASSWORD' : '1234',
     }
 }
 
@@ -130,3 +130,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "/login/"
 
 AUTH_USER_MODEL = 'asdf.Users'
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
+
+STATIC_URL = '/static/'
+
+# 추가된 STATICFILES_DIRS 설정
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]

@@ -42,4 +42,8 @@ urlpatterns = [
 
     path('message_delete/<int:message_id>/', views.Message_Delete, name = 'Message_Delete'),
 
+    #ych
+    path('challenge/', views.challenge_level_selection, name='challenge_level_selection'),
+    path('battle/<int:level>/', views.battle_page, name='battle_page'),
+    path('reset_battle/<int:level>/', views.reset_battle, name='reset_battle'),  # 전투 상태 초기화 URL
 ]

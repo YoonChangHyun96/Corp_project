@@ -3,6 +3,8 @@ from asdf.models import Users, Posts, Messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 
+import random
+
 
 
 def Index_Page(request):
@@ -221,3 +223,91 @@ def Message_Delete(request, message_id):
     message_object.delete()
 
     return redirect('Message_Box_Page')
+
+
+#ych
+
+# 전투 페이지 뷰 함수
+def battle_page(request, level):
+    if 'player_hp' not in request.session:
+        request.session['player_hp'] = 200
+        request.session['opponent_hp'] = 211
+        request.session['battle_logs'] = []
+        request.session['turn_counter'] = 1
+
+    player_hp = request.session['player_hp']
+    opponent_hp = request.session['opponent_hp']
+    battle_logs = request.session['battle_logs']
+    turn_counter = request.session['turn_counter']
+
+    if request.method == 'POST':
+        attack_type = request.POST.get('attack_type')
+
+        if attack_type == 'strong':
+            player_damage = 50
+            battle_logs.append(f"{turn_counter}번째 턴: 플레이어가 강한 공격으로 {player_damage}의 피해를 입혔습니다!")
+        else:
+            player_damage = 20
+            battle_logs.append(f"{turn_counter}번째 턴: 플레이어가 약한 공격으로 {player_damage}의 피해를 입혔습니다!")
+
+        opponent_hp -= player_damage
+        if opponent_hp <= 0:
+            opponent_hp = 0
+
+        if opponent_hp > 0:
+            opponent_damage = 30
+            battle_logs.append(f"{turn_counter}번째 턴: 상대방이 강한 공격으로 {opponent_damage}의 피해를 입혔습니다!")
+            player_hp -= opponent_damage
+            if player_hp <= 0:
+                player_hp = 0
+
+        turn_counter += 1
+
+        request.session['player_hp'] = player_hp
+        request.session['opponent_hp'] = opponent_hp
+        request.session['battle_logs'] = battle_logs
+        request.session['turn_counter'] = turn_counter
+
+    # 플레이어 HP가 0이면 패배 페이지 렌더링, level을 context에 포함
+    if player_hp == 0:
+        return render(request, 'fail_page.html', {'level': level})
+
+    # 상대방 HP가 0이면 승리 페이지 렌더링, level을 context에 포함
+    if opponent_hp == 0:
+        return render(request, 'clear_page.html', {'level': level})
+
+    context = {
+        'player_hp': player_hp,
+        'opponent_hp': opponent_hp,
+        'battle_logs': battle_logs,
+        'level': level  # 이 부분도 추가
+    }
+
+    return render(request, 'battle_page.html', context)
+
+
+
+# 레벨 선택 페이지 뷰 함수
+def challenge_level_selection(request):
+    cleared_levels = [1]  # 1단계만 클리어한 상태
+    max_level = max(cleared_levels)  # 클리어한 최대 레벨 계산
+    next_level = max_level + 1  # 다음 도전할 레벨 계산
+    context = {
+        'cleared_levels': cleared_levels,
+        'max_level': max_level,
+        'next_level': next_level,
+        'levels': reversed(range(1, 11))  # 1단계와 2단계만 표시 (테스트용)
+    }
+
+    return render(request, 'challenge_level_selection.html', context)
+
+# 전투 상태 초기화 뷰
+def reset_battle(request, level):
+    # 전투 상태를 초기화
+    request.session['player_hp'] = 200
+    request.session['opponent_hp'] = 211
+    request.session['battle_logs'] = []
+    request.session['turn_counter'] = 1
+
+    # 초기화 후 해당 레벨의 전투 페이지로 이동
+    return redirect('battle_page', level=level)
